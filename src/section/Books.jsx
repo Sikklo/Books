@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
+import BookDetail from '../components/BookDetail';
 
 const Books = ({ booksData }) => {
-  console.log(booksData)
+  const [show, setShow] = useState(false);
+  const [selectedBook, setSelectedBook] = useState([]);
+  const handleShowToggle = (book) => {
+    setSelectedBook(book);
+    setShow(prev => !prev);
+  }
+  console.log(booksData);
   return (
     <section>
       <div className='w-full flex justify-center items-center'>
@@ -12,17 +19,20 @@ const Books = ({ booksData }) => {
             let amount = book.saleInfo.listPrice && book.saleInfo.listPrice.amount
             if (thumbnail !== undefined && amount !== undefined) {
               return (
-                <div div className='flex flex-col justify-center items-center gap-3 bg-slate-300 rounded-xl hover:scale-105 transition-all' >
+                <div className='flex flex-col justify-center items-center gap-3 bg-slate-300 rounded-xl hover:scale-105 transition-all cursor-pointer' key={book.title}>
                   <img src={thumbnail} alt="" className='pt-3' />
                   <h2 className='text-center max-w-sm'>{book.volumeInfo.title}</h2>
                   <p className='text-cyan-800'>Price: {amount} NTD</p>
-                </div>)
+                  <button className='btn' onClick={() => handleShowToggle(book)}>詳細資料</button>
+                </div>
+              )
             }
-
           })}
-
         </div>
       </div>
+      {show && selectedBook && (
+        <BookDetail selectedBook={selectedBook} setShow={setShow} />
+      )}
     </section >
   )
 }
